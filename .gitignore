@@ -1,0 +1,25 @@
+## .NET
+bin/
+obj/
+*.user
+[Bb]in/
+[Oo]bj/
+artifacts/
+
+## SQLite (base locale du MVP)
+*.db
+*.db-shm
+*.db-wal
+
+## IDE / OS
+.vs/
+.idea/
+*.suo
+Thumbs.db
+.DS_Store
+
+## Extraction temporaire du .docx (le cas échéant)
+docx_extracted/
+
+## Document de conception interne (stratégie commerciale — non publié)
+*.docx

@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PilotageFinancier.Api/PilotageFinancier.Api.csproj" />
+    <Project Path="src/PilotageFinancier.Application/PilotageFinancier.Application.csproj" />
+    <Project Path="src/PilotageFinancier.Domain/PilotageFinancier.Domain.csproj" />
+    <Project Path="src/PilotageFinancier.Forecasting/PilotageFinancier.Forecasting.csproj" />
+    <Project Path="src/PilotageFinancier.Infrastructure/PilotageFinancier.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PilotageFinancier.Tests/PilotageFinancier.Tests.csproj" />
+  </Folder>
+</Solution>
