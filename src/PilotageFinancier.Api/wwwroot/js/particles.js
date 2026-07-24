@@ -8,7 +8,7 @@
   let w, h, dpr, parts = [];
   const mouse = { x: -999, y: -999 };
   const COUNT = window.innerWidth < 760 ? 34 : 66;
-  const palette = ['150,155,175', '150,155,175', '124,108,255']; /* neutre + rares points accent */
+  const palette = ['150,155,175', '150,155,175', '87,171,156']; /* neutre + rares points accent */
 
   function resize() {
     dpr = Math.min(devicePixelRatio || 1, 2);

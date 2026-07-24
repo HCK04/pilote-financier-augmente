@@ -18,7 +18,7 @@ const Charts = (() => {
     const W = container.clientWidth || 520, H = container.clientHeight || 300;
     const P = { l: 46, r: 16, t: 18, b: 30 };
     const iw = W - P.l - P.r, ih = H - P.t - P.b;
-    const accent = kind === 'budget' ? '255,107,129' : '124,108,255';
+    const accent = kind === 'budget' ? '232,128,140' : '87,171,156';
 
     let lo = Infinity, hi = -Infinity;
     pts.forEach((p) => { lo = Math.min(lo, p.borneInf, p.valeur); hi = Math.max(hi, p.borneSup, p.valeur); });
@@ -69,9 +69,9 @@ const Charts = (() => {
 
     if (opts.ceiling != null) {
       const yc = Y(opts.ceiling);
-      const cap = el('line', { x1: P.l, y1: yc, x2: W - P.r, y2: yc, stroke: 'rgb(251,113,133)', 'stroke-width': 1.5, 'stroke-dasharray': '6 6', opacity: 0 });
+      const cap = el('line', { x1: P.l, y1: yc, x2: W - P.r, y2: yc, stroke: 'rgb(232,128,140)', 'stroke-width': 1.5, 'stroke-dasharray': '6 6', opacity: 0 });
       svg.appendChild(cap);
-      const ct = el('text', { x: W - P.r, y: yc - 7, fill: 'rgb(251,113,133)', 'font-size': 10, 'text-anchor': 'end' });
+      const ct = el('text', { x: W - P.r, y: yc - 7, fill: 'rgb(232,128,140)', 'font-size': 10, 'text-anchor': 'end' });
       ct.textContent = 'Plafond ' + compact.format(opts.ceiling);
       svg.appendChild(ct);
       anime({ targets: cap, opacity: [0, 1], easing: 'easeOutQuad', duration: 600, delay: 900 });
@@ -87,8 +87,8 @@ const Charts = (() => {
     pts.forEach((p, i) => {
       const alert = !!p.alerteDepassement;
       const c = el('circle', { cx: X(i), cy: Y(p.valeur), r: alert ? 5 : 3,
-        fill: alert ? 'rgb(251,113,133)' : '#fff', stroke: `rgb(${accent})`, 'stroke-width': alert ? 2 : 1, opacity: 0 });
-      if (alert) { c.style.filter = 'drop-shadow(0 0 8px rgba(251,113,133,.9))'; c.classList.add('alert-dot'); }
+        fill: alert ? 'rgb(232,128,140)' : '#fff', stroke: `rgb(${accent})`, 'stroke-width': alert ? 2 : 1, opacity: 0 });
+      if (alert) { c.style.filter = 'drop-shadow(0 0 8px rgba(232,128,140,.9))'; c.classList.add('alert-dot'); }
       c.dataset.i = i;
       svg.appendChild(c); dots.push(c);
     });
