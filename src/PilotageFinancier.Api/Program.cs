@@ -33,6 +33,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseMiddleware<TenantMiddleware>();
@@ -93,8 +95,33 @@ api.MapGet("/previsions/budgetaire", async (int horizon, int? exercice,
     return Results.Ok(r);
 }).WithSummary("Prévision d'exécution budgétaire (alerte de dépassement de plafond)");
 
+// --- État & démonstration (confort UI) ---
+api.MapGet("/etat", async (PilotageDbContext db, ICurrentTenantService t) =>
+{
+    var ecr = db.EcrituresNormalisees.Where(e => e.TenantId == t.TenantId);
+    var nbEcritures = await ecr.CountAsync();
+    var min = nbEcritures > 0 ? await ecr.MinAsync(e => (DateTime?)e.Date) : null;
+    var max = nbEcritures > 0 ? await ecr.MaxAsync(e => (DateTime?)e.Date) : null;
+    var budgets = await db.BudgetsVotes.Where(b => b.TenantId == t.TenantId).ToListAsync();
+    var plafond = budgets
+        .GroupBy(b => new { b.CodePCGE, b.Exercice })
+        .Select(g => g.OrderByDescending(x => x.DateValidite).First().MontantVote)
+        .Sum();
+    var exercice = budgets.Count > 0 ? budgets.Max(b => b.Exercice) : (int?)null;
+    var nbPoints = await db.SeriesAgregees.Where(s => s.TenantId == t.TenantId).CountAsync();
+    return Results.Ok(new { nbEcritures, nbPoints, plafond, exercice, dateMin = min, dateMax = max });
+}).WithSummary("État courant des données du tenant");
+
+api.MapPost("/demo/seed", async (PilotageDbContext db, NormalisationService norm,
+    AgregationService agg, ICurrentTenantService t) =>
+{
+    var res = await DemoDataGenerator.SeedAsync(db, t.TenantId);
+    await norm.RenormaliserAsync(t.TenantId);
+    await agg.RecalculerAsync(t.TenantId);
+    return Results.Ok(res);
+}).WithSummary("Charger un jeu de données de démonstration (un clic)");
+
 app.MapHub<PrevisionsHub>("/hubs/previsions");
-app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.Run();
 

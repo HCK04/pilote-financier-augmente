@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Pilote Financier Augmenté</title>
+  <meta name="description" content="Prévision de trésorerie et d'exécution budgétaire augmentée par IA." />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="aurora aurora--a"></div>
+    <div class="aurora aurora--b"></div>
+    <div class="aurora aurora--c"></div>
+    <canvas id="field"></canvas>
+    <div class="grid-veil"></div>
+  </div>
+  <div class="spotlight" id="spotlight" aria-hidden="true"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot__mark"><span></span><span></span><span></span></div>
+    <div class="boot__label">Initialisation du moteur</div>
+  </div>
+
+  <header class="nav" id="nav">
+    <a class="brand" href="#top" data-magnetic>
+      <span class="brand__glyph" aria-hidden="true"></span>
+      <span class="brand__name">Pilote<em>Financier</em></span>
+    </a>
+    <nav class="nav__links">
+      <a href="#tresorerie" data-scrollto>Trésorerie</a>
+      <a href="#budget" data-scrollto>Budget</a>
+      <a href="/swagger" target="_blank" rel="noopener">API</a>
+    </nav>
+    <button class="btn btn--ghost" id="navDemo" data-magnetic><span>Charger la démo</span></button>
+  </header>
+
+  <main id="top">
+    <section class="hero" id="hero">
+      <div class="hero__inner">
+        <div class="eyebrow" data-reveal><span class="eyebrow__dot"></span> Conforme LOLF 130-13 · art. 31</div>
+        <h1 class="hero__title" id="heroTitle" data-kinetic>Voyez l'avenir de vos finances.</h1>
+        <p class="hero__sub" data-reveal>
+          Importez un simple export comptable. Le moteur <strong>SSA / ML.NET</strong> projette votre
+          <b>trésorerie</b> et votre <b>exécution budgétaire</b> — et vous alerte d'un dépassement
+          <em>des mois</em> à l'avance.
+        </p>
+        <div class="hero__cta" data-reveal>
+          <button class="btn btn--primary" id="ctaDemo" data-magnetic>
+            <span class="btn__label">Lancer la démonstration</span>
+            <span class="btn__sheen" aria-hidden="true"></span>
+          </button>
+          <button class="btn btn--ghost" data-scrollto-target="#dashboard" data-magnetic>
+            <span>Explorer le tableau de bord</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="deck" id="deck">
+        <div class="deck__card deck__card--1" data-tilt data-depth="34">
+          <div class="mini-label">Trésorerie · 30 j</div>
+          <div class="mini-value" data-count="128500" data-suffix=" MAD">0</div>
+          <svg class="mini-spark" viewBox="0 0 120 40" preserveAspectRatio="none"><path d="M0 30 L20 24 L40 28 L60 14 L80 20 L100 8 L120 12"/></svg>
+        </div>
+        <div class="deck__card deck__card--2" data-tilt data-depth="52">
+          <div class="mini-label">Exécution budgétaire</div>
+          <div class="ring" id="miniRing"><span>72%</span></div>
+        </div>
+        <div class="deck__card deck__card--3 is-alert" data-tilt data-depth="22">
+          <div class="mini-label">Alerte anticipée</div>
+          <div class="mini-alert">Dépassement estimé <b>Juin</b></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash" id="dashboard">
+      <div class="dash__head" data-reveal>
+        <h2 class="section-title">Poste de pilotage</h2>
+        <p class="section-lead">Chargez vos fichiers ou la démo, réglez l'horizon, lancez la projection.</p>
+      </div>
+
+      <div class="dock glass" data-tilt data-depth="8">
+        <div class="dock__grid">
+          <label class="drop" id="dropEcritures" data-drop="ecritures">
+            <input type="file" accept=".csv,.xlsx,.xls" hidden />
+            <div class="drop__icon" aria-hidden="true"></div>
+            <div class="drop__text"><b>Écritures comptables</b><span>CSV / Excel</span></div>
+            <div class="drop__state"></div>
+          </label>
+          <label class="drop" id="dropBudget" data-drop="budget">
+            <input type="file" accept=".csv,.xlsx,.xls" hidden />
+            <div class="drop__icon drop__icon--budget" aria-hidden="true"></div>
+            <div class="drop__text"><b>Budget voté</b><span>CSV / Excel</span></div>
+            <div class="drop__state"></div>
+          </label>
+          <div class="control">
+            <div class="control__row"><span>Horizon de projection</span><output id="horizonOut">30</output></div>
+            <input type="range" id="horizon" min="7" max="120" value="30" step="1" />
+            <div class="control__scale"><span>7 j</span><span>120 j</span></div>
+            <button class="btn btn--primary btn--block" id="runBtn" data-magnetic>
+              <span class="btn__label">Lancer la prévision</span>
+              <span class="btn__sheen" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <article class="kpi glass" data-tilt data-depth="16" data-reveal>
+          <div class="kpi__k">Écritures analysées</div>
+          <div class="kpi__v" data-count="0" id="kpiEcr">0</div>
+          <div class="kpi__foot" id="kpiEcrFoot">en attente de données</div>
+        </article>
+        <article class="kpi glass" data-tilt data-depth="16" data-reveal>
+          <div class="kpi__k">Plafond voté</div>
+          <div class="kpi__v" data-count="0" data-suffix=" MAD" id="kpiPlafond">0</div>
+          <div class="kpi__foot">enveloppe de référence</div>
+        </article>
+        <article class="kpi glass" data-tilt data-depth="16" data-reveal>
+          <div class="kpi__k">Confiance du modèle</div>
+          <div class="kpi__v" id="kpiConf">—</div>
+          <div class="kpi__foot" id="kpiConfFoot">profondeur d'historique</div>
+        </article>
+        <article class="kpi glass kpi--alert" data-tilt data-depth="16" data-reveal id="kpiAlertCard">
+          <div class="kpi__k">Dépassement anticipé</div>
+          <div class="kpi__v" id="kpiAlert">—</div>
+          <div class="kpi__foot" id="kpiAlertFoot">surveillance du plafond</div>
+        </article>
+      </div>
+
+      <div class="charts">
+        <article class="chart glass" id="tresorerie" data-tilt data-depth="10" data-reveal>
+          <header class="chart__head">
+            <div><h3>Trésorerie projetée</h3><p>Flux nets — historique &amp; prévision SSA</p></div>
+            <div class="legend"><i class="legend__hist"></i>Historique <i class="legend__fc"></i>Prévision</div>
+          </header>
+          <div class="chart__canvas" id="chartTreso"></div>
+        </article>
+        <article class="chart glass" id="budget" data-tilt data-depth="10" data-reveal>
+          <header class="chart__head">
+            <div><h3>Exécution budgétaire</h3><p>Dépenses cumulées vs plafond voté</p></div>
+            <div class="legend"><i class="legend__fc"></i>Cumulé <i class="legend__cap"></i>Plafond</div>
+          </header>
+          <div class="chart__canvas" id="chartBudget"></div>
+        </article>
+      </div>
+
+      <footer class="foot" data-reveal>
+        <span>Pilote Financier Augmenté</span><span>·</span>
+        <span>.NET 10 · EF Core · ML.NET (SSA) · multi-tenant</span>
+      </footer>
+    </section>
+  </main>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="/vendor/anime.min.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/particles.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
